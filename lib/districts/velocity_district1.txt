@@ -1,0 +1,21 @@
+b1100'b1100'b1100'b1100'b1100'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111
+e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111
+e'e'b0011'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b0011'b0011'b0011'b0011'b0011'b0011'b0011'e'e'e'b1111
+e'e'b1111'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b0111'e'e'e'e'e'e'e'e'e'e'b1111
+e'e'b1111'e'e'e'e'e'e'e'e'e'b0111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111
+e'e'b1111'e'e'e'e'e'e'e'e'b0111'e'e'e'e'e'e'e'b1011'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111
+e'e'b1111'e'e'e'e'e'e'e'b0111'e'e'e'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'e'e'e'e'e'e'b0111'e'e'e'e'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'e'e'b1100'b1100'b1100'b1100'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'e'e'e'e
+e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'b1111'b0011'b0011'b0011'b0011'b0011'b0011'b0011'e'e'e'e'e'e'b0011'b0011'b0011'b0011'b0011'b0011'b0011'b0011'b0011'b0011'b0011'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'b0011'b0011
+OPTIONS
+wallpaper : purple_hexagons
+mosaic : False

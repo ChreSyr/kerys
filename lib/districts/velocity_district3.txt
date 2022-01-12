@@ -1,0 +1,27 @@
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+OPTIONS
+wallpaper : w1
+mosaic : True
+corners : True
