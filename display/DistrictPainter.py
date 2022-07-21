@@ -1,8 +1,6 @@
 
 
-import pymunk
 import baopig as bp
-from .sprites.PlateformSprite import PlateformSprite
 from .sprites.FighterSprite import FighterSprite
 from .interactivewidgets.Button import PlayPauseButton
 
@@ -14,7 +12,7 @@ class FightersLayer(bp.Layer):
         bp.Layer.__init__(self, playground, FighterSprite, weight=weight, name="fighters_layer")
 
 
-class DistrictPainter(bp.SubZone, bp.Openable, bp.Closable):
+class DistrictPainter(bp.SubZone, bp.Handler_SceneOpen, bp.Handler_SceneClose):
 
     def __init__(self, scene, *args, **kwargs):
         """
@@ -27,108 +25,36 @@ class DistrictPainter(bp.SubZone, bp.Openable, bp.Closable):
 
         self._district = None
         self.i = 0  # for swap background
-        self._blocks = bp.Layer(self, PlateformSprite, weight=1, name="plateforms_layer")
-        self._fighters = FightersLayer(self, weight=2)
-        self._buttons = bp.Layer(self, bp.Button, weight=3, name="buttons_layer")
-        self._space = None
+
+        self._blocks_layer = bp.Layer(self, weight=1, name="blocks_layer")
+        self._fighters_layer = FightersLayer(self, weight=2)
+        self._buttons_layer = bp.Layer(self, bp.Button, weight=3, name="buttons_layer")
 
         # self.set_always_dirty()  # TODO : if low fps, set_always_dirty() ?
 
-        self._last_run_time = None
+        PlayPauseButton(self, (35, 35), layer=self.buttons_layer)
 
-        # debug
-        class KillableList(list, bp.Communicative):
-            """Kind of WeakTypedList, only contains alive communicative objects"""
-            def __init__(self):
-                list.__init__(self)
-                bp.Communicative.__init__(self)
-            def append(self, widget):
-                super().append(widget)
-                self.connect("remove", widget.signal.KILL)
-            def extend(self, widgets):
-                for widget in widgets:
-                    self.append(widget)
-            def remove(self, widget_ref):
-                self.disconnect(emitter=widget_ref())
-                super().remove(widget_ref())
-        self.debug_shapes = False
-        self.static_shapes_debugger = KillableList()
-        self.animated_shapes_debugger = KillableList()
-        self.debug_collisions = False
-        self.debug_boundary_stepback = False
-        self.debug_jumps = False
-
-        PlayPauseButton(self, (35, 35), layer=self.buttons)
-
-    blocks = property(lambda self: self._blocks)  # TODO : plateforms
-    buttons = property(lambda self: self._buttons)
+    blocks_layer = property(lambda self: self._blocks_layer)
+    buttons_layer = property(lambda self: self._buttons_layer)
     district = property(lambda self: self._district)
-    fighters = property(lambda self: self._fighters)
-    space = property(lambda self: self._space)
+    fighters_layer = property(lambda self: self._fighters_layer)
 
-    def _debug_shapes_of(self, body):
-
-        offset = body.position + body.center_of_gravity
-        if body.body_type is pymunk.Body.STATIC:
-            l = self.static_shapes_debugger
-        else:
-            l = self.animated_shapes_debugger
-        for shape in body.shapes:
-            # if body.body_type is pymunk.Body.STATIC:
-            #     print(shape)
-            if hasattr(shape, "get_vertices"):  # fighters
-                # vertices = tuple(v.rotated(body.angle) for v in shape.get_vertices())
-                vertices = shape.get_vertices()
-                # assert body.angle == 0, "A body with infinite moment cannot rotate from collisions"
-                l.append(bp.Polygon(self, (255, 255, 255), vertices, 1,  # TODO : angle
-                                    offset=offset,
-                                    touchable=False, offset_angle=body.angle))
-                l.append(bp.Line(self, (255, 0, 0), vertices[0], vertices[1], 1,
-                                 offset=offset, touchable=False, offset_angle=body.angle))
-            elif hasattr(shape, "a"):  # boundaries
-                l.append(bp.Line(self, (255, 255, 255), shape.a, shape.b, 1,
-                                 offset=offset, touchable=False, offset_angle=body.angle))
-                mid = (shape.a + shape.b) / 2
-                l.append(bp.Line(self, (0, 0, 255), mid, mid + shape.normal * 5, 1,
-                                 offset=offset, touchable=False, offset_angle=body.angle))
-            # elif hasattr(shape, "radius"):  # solidpoints
-            #     l.append(bp.Circle(self, (255, 255, 255), center=body.position + shape.offset,
-            #                        radius=shape.radius+1, touchable=False))
-            else:
-                raise NotImplemented
-        if hasattr(body, "gravity"):
-            l.append(bp.Line(self, (127, 127, 255), (0, 0), body.gravity * 3 * self.space.dt, 3,
-                             offset=offset, touchable=False))
-            # l.append(bp.Rectangle(self, (0, 127, 0), tuple(body.gravity), touchable=False, pos=offset))
-        l.append(bp.Line(self, (0, 127, 127), (0, 0), body.velocity * self.space.dt,
-                         offset=offset, touchable=False, name="WHEREAMI"))
-        l.append(bp.Rectangle(self, color=(0, 255, 0), size=(1, 1), touchable=False, pos=offset))
-        # l.append(bp.Rectangle(self, (0, 255, 0), tuple(body.velocity), touchable=False, pos=offset))
-
-    def close(self):
+    def handle_scene_close(self):
 
         self.district.close()
-
-        self.terrain = None
-        for layer in (self.blocks, self.fighters):
+        for layer in (self.blocks_layer, self.fighters_layer):
             layer.clear()
-
-        self.debug_shapes = False
-        self.debug_collisions = False
-        self.debug_boundary_stepback = False
-        self.debug_avoided_boundary_stepback = False
-        assert len(self.animated_shapes_debugger) is 0
-        assert len(self.static_shapes_debugger) is 0
+        print(self.children)
 
     def set_district(self, district):
 
-        self.set_background_image(district.wallpaper)  # resize the playground
-        # self.blocks.set_col_width(district.block_size[0])
-        # self.blocks.set_row_height(district.block_size[1])
-        # self.blocks.set_nbrows(district.nbrows)
-        # self.blocks.set_nbcols(district.nbcols)
+        window_size = (self.scene.rect.w - self.scene.buttons_zone.rect.w, self.scene.rect.h)
+        asked_size = district.size
+        size = min(window_size[0], asked_size[0]), min(window_size[1], asked_size[1])
+        self.resize(*size)
+
+        self.set_background_image(district.wallpaper)  # resize the wallpaper
         self._district = district
-        self._space = self.district.space
 
         """
         i = 0
@@ -158,16 +84,7 @@ class DistrictPainter(bp.SubZone, bp.Openable, bp.Closable):
         Ebuld(self, pos=(2*64, 64*i))
         """
 
-    def toggle_debug_shapes(self):
-
-        self.debug_shapes = not self.debug_shapes
-        if self.debug_shapes:
-            self._debug_shapes_of(self.space.static_body)
-        else:
-            for widget in self.animated_shapes_debugger + self.static_shapes_debugger:
-                widget.kill()
-
-
+    # ...
 
     def find_cases_libres(self):
         """

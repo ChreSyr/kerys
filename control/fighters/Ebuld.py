@@ -5,7 +5,10 @@ from .Fighter import Fighter
 
 class Ebuld(Fighter):
 
-    def __init__(self, player, district, id, center):
+    #               left top
+    HITBOX_MARGINS = (5, 19)
 
-        Fighter.__init__(self, player, district, id, center)
+    def __init__(self, player, district, id, midbottom):
+
+        Fighter.__init__(self, player, district, id, midbottom)
 

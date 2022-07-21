@@ -1,26 +1,14 @@
 
 
-import baopig as bp
 from .Sprite import DynamicSprite
 
 
 class FighterSprite(DynamicSprite):
 
-    def __init__(self, shape):
+    def __init__(self, fighter):
 
-        fighter = shape.fighter
-        DynamicSprite.__init__(self, shape, fighter.images.rest,
-                               pos=(fighter.left, fighter.top),
-                               layer="fighters_layer")
+        DynamicSprite.__init__(self, fighter, fighter.images.rest, layer="fighters_layer", pos=(0, 0))
 
-        self.original = fighter.images.rest.copy()  # TODO : directions, walk animations
+    def paint(self):
 
-        self._fighter = shape.fighter
-
-    fighter = property(lambda self: self._fighter)
-
-    def set_angle(self, angle_degrees):
-
-        self.set_surface(bp.transform.rotate(self.original, angle_degrees))
-        self.center = self.controller.center + self.shape.offset
-
+        self.set_surface(self.controller.images.get())

@@ -3,42 +3,40 @@
 import baopig as bp
 
 
-class DynamicSprite(bp.AnimatedWidget):
+class DynamicSprite(bp.Widget):
     """DynamicSprite represents one shape attached to a dynamic body"""
 
-    def __init__(self, shape, surface, *args, **kwargs):
+    def __init__(self, controller, surface, *args, **kwargs):
 
-        bp.AnimatedWidget.__init__(
+        bp.Widget.__init__(
             self,
-            parent=shape.controller.district.painter,
+            parent=controller.district.painter,
             surface=surface,
             *args, **kwargs
         )
-        self._shape = shape
+        self._controller = controller
 
     def __str__(self):
-        return f"{self.__class__.__name__}({self._shape})"
+        return f"{self.__class__.__name__}({self.body})"
 
-    controller = property(lambda self: self._shape.controller)
-    body = property(lambda self: self._shape.body)
-    shape = property(lambda self: self._shape)
+    controller = property(lambda self: self._controller)
+    body = property(lambda self: self._controller.body)
 
 
 class StaticSprite(bp.Image):
     """StaticSprite represents one shape attached to the static body of current space"""
 
-    def __init__(self, shape, image, *args, **kwargs):
+    def __init__(self, block, image, *args, **kwargs):
 
         bp.Image.__init__(
             self,
-            parent=shape.district.painter,
+            parent=block.district.painter,
             image=image,
             *args, **kwargs
         )
-        self._shape = shape
-        self._body = shape.body
-        self._district = shape.district
-        self._painter = shape.district.painter
+        # self._shape = shape
+        self._district = block.district
+        self._painter = self._district.painter
 
         self.origin.lock()
         self.lock_size()

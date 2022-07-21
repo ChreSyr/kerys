@@ -1,17 +1,17 @@
-e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
-e'e'e'e'e'e'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e
+b0001'b0010'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+b0100'b1000'e'e'e'e'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e
 e'e'e'e'e'e'e'e'e'e'e'b1111'b1111'b1111'e'e'e'e'e'e'e'e'e'e'e
 e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
 e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
-e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'b1111'e'e
+e'e'e'e'b0101'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'b1111'e'e
 e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'b1111'e'e
-e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
-e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+b1010'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+b1111'b0010'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
 b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'e'e'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111'b1111
 e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
 e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
-e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
-e'e'e'e'e'e'e'e'b1111'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'b1111
+b1100'b1100'b1000'e'e'e'e'e'b1111'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e'e
+e'e'e'e'e'e'e'e'b1111'b1111'b1111'b0011'e'e'e'e'e'e'e'e'e'e'e'b0011'b1111
 OPTIONS
-wallpaper : purple_hexagons
+wallpaper : findcities
 mosaic : True

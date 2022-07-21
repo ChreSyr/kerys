@@ -7,8 +7,6 @@ def load(name):
     try:
         # return pygame.image.load("lib/images/icon.png")
         return pygame.image.load("lib/images/"+name+".png")
-    except pygame.error:
-        return pygame.image.load("lib/images/"+name+".jpg")
     except FileNotFoundError:
         return pygame.image.load("lib/images/"+name+".jpg")
 
@@ -21,7 +19,6 @@ textbutton = load("buttons/textbutton")
 w, h = 140, 40
 textbutton = pygame.transform.scale(textbutton, (w, h * 3))
 textbutton_bck = textbutton.subsurface(0, 0, w, h)
-# textbutton_hover = textbutton.subsurface(0, h, w, h)
 textbutton_focus = textbutton.subsurface(0, h, w, h)
 textbutton_link = textbutton.subsurface(0, h*2, w, h)
 button_background = load("buttons/button_background")
@@ -48,12 +45,17 @@ btnzone_bckgr = load("buttons_zone_background")
 wallpapers = tuple(load("wallpapers/w"+str(i)) for i in range(1, 18))
 
 # BLOCKS
+accelerator = load("blocks/accelerator")
 brick = load("blocks/brick")
+jumper = load("blocks/jumper")
+slimeblock = load("blocks/slimeblock")
 
 # FIGHTERS
 fighters = load("fighters/all")
-kocci_sprite = load("fighters/kocci")
-ebuld_sprite = load("fighters/ebuld")
-royal_sprite = load("fighters/royal")
-ytrei_sprite = load("fighters/ytrei")
-sabul_sprite = load("fighters/sabul")
+fighters = {
+    "kocci": fighters.subsurface((0, 0, 64, 256)),
+    "ebuld": fighters.subsurface((64, 0, 64, 256)),
+    "royal": fighters.subsurface((128, 0, 64, 256)),
+    "ytrei": fighters.subsurface((192, 0, 64, 256)),
+    "sabul": fighters.subsurface((256, 0, 64, 256)),
+}

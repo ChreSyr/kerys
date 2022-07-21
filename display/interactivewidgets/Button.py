@@ -4,56 +4,53 @@ import baopig as bp
 import lib.images as im
 
 
-class TextButton(bp.Button):
+class Button_LinkImage(bp.Image):
 
-    STYLE = bp.Button.STYLE.substyle()
-    STYLE.modify(
-        width=140,
-        height=40,
-        background_color=(0, 0, 0, 0),
-        padding=(20, 4, 20, 8),
-        text_style={"font_height": 28, "pos": (0, -2)},
-    )
+    def __init__(self, textbutton):
 
-    def __init__(self, parent, text, **kwargs):
+        bp.Image.__init__(self, textbutton, image=im.textbutton_link, visible=False, layer=textbutton.behind_content)
 
-        bp.Button.__init__(
-            self,
-            parent,
-            text,
-            background_image=im.textbutton_bck,
-            hover=-1,
-            link=im.textbutton_link,
-            focus=im.textbutton_focus,
-            **kwargs
-        )
+        def move_text(dy):
+            self.parent.text_widget.move(dy=dy)
+            if dy > 0:
+                self.parent.background_image.hide()
+            else:
+                self.parent.background_image.show()
+        self.signal.SHOW.connect(bp.PrefilledFunction(move_text, dy=3), owner=self)
+        self.signal.HIDE.connect(bp.PrefilledFunction(move_text, dy=-3), owner=self)
 
-    def press(self):
 
-        with bp.paint_lock:
-            self.text_widget.y += 3
-            self.background.hide()
-            self.link_sail.show()
+class Button_FocusImage(bp.Image):
 
-    def unpress(self):
+    def __init__(self, textbutton):
 
-        with bp.paint_lock:
-            self.text_widget.y -= 3
-            self.background.show()
-            self.link_sail.hide()
+        bp.Image.__init__(self, textbutton, image=im.textbutton_focus, visible=False, layer=textbutton.behind_content)
+
+
+class PlayPauseButton_LinkImage(bp.Image):
+
+    def __init__(self, textbutton):
+
+        bp.Image.__init__(self, textbutton, image=im.play_press, visible=False, layer=textbutton.behind_content)
 
 
 class PlayPauseButton(bp.Button):
+    STYLE = bp.Button.STYLE.substyle()
+    STYLE.modify(
+        width=im.pause.get_width(),
+        height=im.pause.get_width(),
+        background_color=(0, 0, 0, 0),
+        background_image=im.play_bck,
+        focus_class=None,
+        hover_class=bp.Button_HoverSail,
+        link_class=PlayPauseButton_LinkImage,
+    )
 
     def __init__(self, parent, pos, **options):
 
-
         bp.Button.__init__(
             self, parent,
-            pos=pos, background_image=im.play_bck,
-            background_color=(0, 0, 0, 0),
-            link=im.play_press, focus=-1, hover=30,
-            size=im.pause.get_size(),
+            pos=pos,
             **options
         )
         content_layer = bp.Layer(self, bp.Image, weight=self.default_layer.weight + 1)
@@ -92,12 +89,12 @@ class PlayPauseButton(bp.Button):
 
     def validate(self):
 
-        space = self.parent.district.space
+        district = self.parent.district
         if self.is_paused:
-            space.resume()
+            district.resume()
             self.current = self.pause
         else:
-            space.pause()
+            district.pause()
             self.current = self.play
 
-    is_paused = property(lambda self: self.parent.district.space.is_paused)
+    is_paused = property(lambda self: self.parent.district.is_paused)

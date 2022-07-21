@@ -2,10 +2,9 @@
 
 import baopig as bp
 import lib.images as im
-from .Button import TextButton
 
 
-class DialogButton(TextButton):
+class DialogButton(bp.Button):
 
     def validate(self):
 
@@ -27,7 +26,7 @@ class Dialog(bp.SubZone):
         # TODO : solve : transparent background don't work -> see content corners
 
         assert isinstance(scene, bp.Scene)
-        if bp.get_application().focused_scene is not scene:
+        if app.focused_scene is not scene:
             raise PermissionError("A Dialog must be open in the focused scene")
 
         bp.SubZone.__init__(self, scene, scene.size, pos=(0, 0))
@@ -39,7 +38,6 @@ class Dialog(bp.SubZone):
                               max_width=self.content.w-60)
 
         def plus(l1, l2):
-            print(tuple(l1[i] + l2[i] for i in range(len(l1))))
             return tuple(l1[i] + l2[i] for i in range(len(l1)))
         buttons_zone = bp.SubZone(self.content, size=(self.content.w-60, 46 * ((len(choices)-1)//3+1)),
                                   pos=(0, -30), sticky="bottom",
@@ -57,7 +55,7 @@ class Dialog(bp.SubZone):
 
     def ask(self):
 
-        kerys = bp.get_application()
+        kerys = app
         background = kerys.display.copy()
         sail = bp.Surface(kerys.size, bp.SRCALPHA)
         sail.fill((0, 0, 0, 50))
