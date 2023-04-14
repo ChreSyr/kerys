@@ -13,8 +13,8 @@ import time
 # Constants
 GRAVITY = bp.Vector2(0, 1)
 AIR_FRICTION = .03
-NB_CIRCLES = 5
-NB_BALLS = 1
+NB_CIRCLES = 50
+NB_BALLS = 10
 
 
 class PhysicsManager:
@@ -68,7 +68,7 @@ class Cercle:
 class Ball(Cercle):
     """Cercle affectee par la gravité"""
     def __init__(self, center, radius, color):
-        super(Ball, self).__init__(center, radius, color)
+        Cercle.__init__(self, center, radius, color)
         self.vel = bp.Vector2(0, 0)
         self.acc = bp.Vector2(0, 0)
         density = .01
@@ -118,8 +118,8 @@ class Ball(Cercle):
             if SIMULATE_MASS: poussee *= self.mass  # the reaction is equal to the collision
             react_support = bp.Vector2(0, poussee)
             self.apply_force(react_support)
-        elif self.center[1] > physics_zone.h - self.radius:
-            poussee = physics_zone.h - self.radius - self.center[1]
+        elif self.center[1] > physics_zone.rect.h - self.radius:
+            poussee = physics_zone.rect.h - self.radius - self.center[1]
             if SIMULATE_MASS: poussee *= self.mass  # the reaction is equal to the collision
             react_support = bp.Vector2(0, poussee)
             self.apply_force(react_support)
@@ -128,8 +128,8 @@ class Ball(Cercle):
             if SIMULATE_MASS: poussee *= self.mass  # the reaction is equal to the collision
             react_support = bp.Vector2(poussee, 0)
             self.apply_force(react_support)
-        elif self.center[0] > physics_zone.w - self.radius:
-            poussee = physics_zone.w - self.radius - self.center[0]
+        elif self.center[0] > physics_zone.rect.w - self.radius:
+            poussee = physics_zone.rect.w - self.radius - self.center[0]
             if SIMULATE_MASS: poussee *= self.mass  # the reaction is equal to the collision
             react_support = bp.Vector2(poussee, 0)
             self.apply_force(react_support)
@@ -151,7 +151,7 @@ class Ball(Cercle):
         self.center += self.vel
         self.acc *= 0
 
-        self.widget.center = self.center
+        self.widget.set_pos(center=self.center)
 
 
 class Polygon:
@@ -191,7 +191,7 @@ class CercleWidget(bp.Circle):
     def __init__(self, circle):
 
         assert isinstance(circle, Cercle)
-        bp.Circle.__init__(self, physics_zone, circle.color, circle.center, circle.radius)
+        bp.Circle.__init__(self, physics_zone, color=circle.color, radius=circle.radius, center=circle.center)
 
         self.circle = circle
 
@@ -203,26 +203,26 @@ class Player:
         self.grip = None
         self.m = pygame.mouse
         self.m_pos = self.m.get_pos()  # in command_zone referencial
-        self.m_pos = self.m_pos[0] - command_zone.w, self.m_pos[1]
+        self.m_pos = self.m_pos[0] - command_zone.rect.w, self.m_pos[1]
         self.m_clic = self.m.get_pressed()
         self.m_rel = self.m.get_rel()
 
     def update_mouse(self):
         self.m_pos = self.m.get_pos()
-        self.m_pos = self.m_pos[0] - command_zone.w, self.m_pos[1]
+        self.m_pos = self.m_pos[0] - command_zone.rect.w, self.m_pos[1]
         self.m_clic = self.m.get_pressed()
         self.m_rel = self.m.get_rel()
 
     def apply_input(self):
         if self.m_clic[0] and physics_zone.collidemouse():
             self.grip.center = bp.Vector2(*self.m_pos)
-            self.grip.widget.center = self.grip.center
+            self.grip.widget.set_pos(center=self.grip.center)
             if self.grip in balls:
                 self.grip.vel = bp.Vector2(*self.m_rel)
 
         pressed = lambda val: int(bp.keyboard.is_pressed(val))
-        dy = pressed("s") - pressed("z")
-        dx = pressed("d") - pressed("q")
+        dy = pressed(bp.K_s) - pressed(bp.K_z)
+        dx = pressed(bp.K_d) - pressed(bp.K_q)
         mvt = bp.Vector2(dx, dy) * 3 / FPS
         self.ball.acc += mvt
 
@@ -250,9 +250,11 @@ class MainScene(bp.Scene):
         self.physics_manager.update_timer.cancel()
 
     def open(self):
+
+        super().open()
         self.physics_manager.update_timer.start()
 
-    def receive(self, event):
+    def handle_event(self, event):
         player.update_mouse()
         if event.type == pygame.KEYDOWN:
             if event.key == pygame.K_SPACE:
@@ -292,52 +294,55 @@ class PhysicsZone(bp.Zone):
             ancient = PhysicsZone.empty_surf.copy()
             ancient.blit(self.surface, (0, 0))
             ancient.blit(PhysicsZone.sail, (0, 0))
+            if self.background_image:
+                self.background_image.kill()
             self.set_background_image(ancient)
-        super()._update_rect()
+        return super()._update_rect()
 
 
 main_scene = MainScene()
 # main_scene.enable_selecting(False)
-physics_enginer.set_style_for(bp.Button, height=40, width=120)
-physics_enginer.set_style_for(bp.SliderBar, length=120)
+physics_enginer.set_style_for(bp.Button, height="80%", width="90%")
+physics_enginer.set_style_for(bp.Slider, wideness="50%", length="90%")
+physics_enginer.set_style_for(bp.SliderBar)
+physics_enginer.set_style_for(bp.CheckBox, height="80%", width="90%")
+physics_enginer.set_style_for(bp.Text, font_file="monospace", font_height=20)
 
 # Zones
-command_zone = bp.Zone(main_scene, width=command_zone_W, height="100%", pos=(0, 0), background_color="grey4")
-physics_zone = PhysicsZone(main_scene, size=(W-140, "100%"), pos=command_zone.topright, background_color=(0, 0, 0))
+command_zone = bp.Zone(main_scene, width=command_zone_W, height="100%", pos=(0, 0),
+                       background_color=bp.Vector3(physics_enginer.theme.colors.content) / 2)
+physics_zone = PhysicsZone(main_scene, size=(W-140, "100%"), pos=command_zone.rect.topright, background_color=(0, 0, 0))
 
 # Command Zone & Quit Button
 command_buttons_layer = bp.GridLayer(command_zone, nbcols=1, row_height=60, col_width=140)
-quit_button = bp.Button(command_zone, text="Quit", command=physics_enginer.exit, sticky="center", row=0)
-
-# TODO : is it possible / logic to set sticky in the style ? Does style has to deal with positionning ?
-# TODO : else, is it possible / logic to ask to the gridlayer to set all of its widget at the center ?
+quit_button = bp.Button(command_zone, text="Quit", command=physics_enginer.exit, loc="center", row=0)
 
 # Rest button
 def reset_balls():
     for b in balls:
         b.vel = bp.Vector2(0, 0)
         b.center = bp.Vector2(*b.origin)
-reset_button = bp.Button(command_zone, row=1, text="Reset balls", sticky="center", command=reset_balls)
+reset_button = bp.Button(command_zone, row=1, text="Reset balls", loc="center", command=reset_balls)
 
 # Gravity Slider
-gravity_slider = bp.Slider(command_zone, minval=0, maxval=4, sticky="center", step=.1, row=2,
+gravity_slider = bp.Slider(command_zone, minval=0, maxval=4, loc="center", step=.1, row=2,
                            title="gravity", defaultval=GRAVITY[1])
-gravity_slider.signal.NEW_VAL.connect(lambda val: GRAVITY.__setitem__(1, val))
+gravity_slider.signal.NEW_VAL.connect(lambda val: GRAVITY.__setitem__(1, val), owner=None)
 
 # Frictions Slider
 def update_air_friction(val):
     global AIR_FRICTION
     AIR_FRICTION = val
-air_friction_slider = bp.Slider(command_zone, minval=0, maxval=1, sticky="center", step=.01, row=3,
+air_friction_slider = bp.Slider(command_zone, minval=0, maxval=1, loc="center", step=.01, row=3,
                               title="friction", defaultval=AIR_FRICTION)
-air_friction_slider.signal.NEW_VAL.connect(update_air_friction)
+air_friction_slider.signal.NEW_VAL.connect(update_air_friction, owner=None)
 
 # Shadowing
 def shadow_command():
     main_scene.shadowing = not main_scene.shadowing
     if main_scene.shadowing is False:
         physics_zone.set_background_image(None)
-shadowing_button = bp.CheckBox(command_zone, row=4, text="Shadows", sticky="center", command=shadow_command)
+shadowing_button = bp.CheckBox(command_zone, row=4, text="Shadows", loc="center", command=shadow_command)
 # shadowing_button.signal.VALIDATE.connect(shadow_command)
 
 # Freeze
@@ -347,42 +352,68 @@ def freeze_command():
         update_timer.resume()
     else:
         update_timer.pause()
-freeze_button = bp.Button(command_zone, row=5, text="Freeze", sticky="center", command=freeze_command)
+freeze_button = bp.Button(command_zone, row=5, text="Freeze", loc="center", command=freeze_command)
 
 # Mass simulation
 SIMULATE_MASS = False
 def mass_command():
     global SIMULATE_MASS
     SIMULATE_MASS = not SIMULATE_MASS
-mass_button = bp.CheckBox(command_zone, row=6, text="Simulate Mass", sticky="center", command=mass_command)
+# mass_button = bp.CheckBox(command_zone, row=6, text="Simulate Mass", loc="center", command=mass_command)
 # mass_button.signal.VALIDATE.connect(mass_command)
+
+# Add balls
+def add_ball():
+    r = 16
+    b = Ball(center=[random.randint(r, physics_zone.rect.w - r), random.randint(r, physics_zone.rect.h - r)],
+             radius=r, color=(160, 126, 0))
+    while True in [b.collidingcercle(c) for c in circles]:
+        b.center = bp.Vector2(random.randint(r, physics_zone.rect.w - r), random.randint(r, physics_zone.rect.h - r))
+        b.widget.set_pos(center=b.center)
+    balls.append(b)
+bp.Button(command_zone, row=6, text="+ ball", loc="center", command=add_ball)
+
+# remove balls
+def rem_ball():
+    if balls:
+        ball = balls.pop(-1)
+        ball.widget.kill()
+        del ball
+bp.Button(command_zone, row=7, text="- ball", loc="center", command=rem_ball)
+
+# Add circle
+def add_circle():
+    with bp.paint_lock:
+        r = random.randint(10, 100)
+        c = Cercle(center=[random.randint(r, physics_zone.rect.w - r), random.randint(r, physics_zone.rect.h - r)],
+                   radius=r,
+                   color=(random.randrange(255), random.randrange(255), random.randrange(255)),
+                   )
+        while True in [c.collidingcercle(c2) for c2 in circles]:
+            c.center = bp.Vector2(random.randint(r, physics_zone.rect.w - r), random.randint(r, physics_zone.rect.h - r))
+            c.widget.set_pos(center=c.center)
+            c.radius = random.randint(10, 100)
+            c.widget.set_radius(c.radius)
+        circles.append(c)
+bp.Button(command_zone, row=8, text="+ circle", loc="center", command=add_circle)
+
+# remove circle
+def rem_circle():
+    if circles:
+        circle = circles.pop(-1)
+        circle.widget.kill()
+        del circle
+bp.Button(command_zone, row=9, text="- circle", loc="center", command=rem_circle)
 
 # Creating planets
 circles = []
 for i in range(NB_CIRCLES):
-    r = 100
-    c = Cercle([random.randint(r, physics_zone.w - r), random.randint(r, physics_zone.h - r)],
-                r,
-                (random.randrange(255), random.randrange(255), random.randrange(255)),
-               )
-    while True in [c.collidingcercle(c2) for c2 in circles]:
-        c.widget.kill()
-        r = random.randint(10, 100)
-        c = Cercle([random.randint(r, physics_zone.w - r), random.randint(r, physics_zone.h - r)],
-                    r,
-                    (random.randrange(255), random.randrange(255), random.randrange(255)),
-                   )
-    circles.append(c)
+    add_circle()
 
 # Creating spaceships
 balls = []
 for i in range(NB_BALLS):
-    r = 16
-    b = Ball([random.randint(r, physics_zone.w - r), random.randint(r, physics_zone.h - r)], r, (160, 126, 0))
-    while True in [b.collidingcercle(c) for c in circles]:
-        b.widget.kill()
-        b = Ball([random.randint(r, physics_zone.w - r), random.randint(r, physics_zone.h - r)], r, (160, 126, 0))
-    balls.append(b)
+    add_ball()
 
 player = Player()
 player.grip = balls[-1]
