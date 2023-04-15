@@ -12,7 +12,7 @@ import time
 
 # Constants
 GRAVITY = bp.Vector2(0, 1)
-AIR_FRICTION = .03
+AIR_FRICTION = .1
 NB_CIRCLES = 50
 NB_BALLS = 10
 
